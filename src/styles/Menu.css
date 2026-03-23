@@ -1,0 +1,202 @@
+/* Menu Page Container */
+.menu {
+  width: 100%;
+  background: #fafafa;
+  min-height: 100vh;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Menu Header */
+.menu-header {
+  background: linear-gradient(135deg, #ef4f5f 0%, #f7941d 100%);
+  padding: 40px 20px;
+  color: white;
+  text-align: center;
+}
+
+.menu-title {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+}
+
+.menu-subtitle {
+  font-size: 16px;
+  opacity: 0.9;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Category Tabs */
+.menu-categories {
+  background: white;
+  padding: 20px 0;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 80px;
+  z-index: 50;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.category-tabs {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.category-tabs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.category-tabs::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 3px;
+}
+
+.category-tab {
+  padding: 10px 20px;
+  border: 2px solid #e8e8e8;
+  background: white;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  font-family: inherit;
+}
+
+.category-tab:hover {
+  border-color: #ef4f5f;
+  color: #ef4f5f;
+  background: #fef5f5;
+}
+
+.category-tab.active {
+  background: linear-gradient(135deg, #ef4f5f 0%, #f7941d 100%);
+  border-color: transparent;
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 79, 95, 0.3);
+}
+
+/* Menu Items Section */
+.menu-items-section {
+  padding: 40px 0;
+  background: #fafafa;
+}
+
+.menu-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .menu-title {
+    font-size: 28px;
+  }
+
+  .menu-subtitle {
+    font-size: 14px;
+  }
+
+  .menu-header {
+    padding: 30px 20px;
+  }
+
+  .category-tabs {
+    gap: 8px;
+  }
+
+  .category-tab {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .menu-items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .menu-categories {
+    top: 70px;
+  }
+}
+
+@media (max-width: 600px) {
+  .menu-title {
+    font-size: 24px;
+  }
+
+  .menu-subtitle {
+    font-size: 13px;
+  }
+
+  .menu-header {
+    padding: 25px 15px;
+  }
+
+  .container {
+    padding: 0 15px;
+  }
+
+  .menu-items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 12px;
+  }
+
+  .category-tabs {
+    gap: 6px;
+  }
+
+  .category-tab {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+
+  .menu-items-section {
+    padding: 25px 0;
+  }
+
+  .menu-categories {
+    top: 62px;
+    padding: 15px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-title {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+
+  .menu-header {
+    padding: 20px 15px;
+  }
+
+  .menu-items-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-items-section {
+    padding: 20px 0;
+  }
+
+  .category-tab {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+}

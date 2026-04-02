@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useCart } from '../CartContext';
 import '../styles/Navbar.css';
 
-const Navbar = ({
-  cartCount = 0,
-  isLoggedIn = false,
-  onLoginClick,
-  onCartClick,
-  onLogoClick,
-  onSearch,
-}) => {
+const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const { cartItems } = useCart();
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -18,27 +14,19 @@ const Navbar = ({
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (onSearch) {
-      onSearch(searchTerm);
-      setSearchTerm('');
-    }
-  };
-
-  const handleSearchClick = () => {
-    if (onSearch) {
-      onSearch(searchTerm);
-      setSearchTerm('');
-    }
+    // For now, just log or handle search
+    console.log('Search:', searchTerm);
+    setSearchTerm('');
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
         {/* Logo / App Name */}
-        <div className="navbar-logo" onClick={onLogoClick} style={{ cursor: 'pointer' }}>
+        <Link to="/" className="navbar-logo">
           <span className="logo-icon">🍔</span>
           <span className="logo-text">Yummies</span>
-        </div>
+        </Link>
 
         {/* Search Bar */}
         <form className="navbar-search" onSubmit={handleSearchSubmit}>
@@ -49,24 +37,17 @@ const Navbar = ({
             onChange={handleSearch}
             className="search-input"
           />
-          <button type="button" className="search-btn" onClick={handleSearchClick}>
+          <button type="submit" className="search-btn">
             🔍
           </button>
         </form>
 
-        {/* Right Section: Cart & Login */}
+        {/* Right Section: Cart */}
         <div className="navbar-right">
-          <button className="cart-btn" onClick={onCartClick} title="View Cart">
+          <Link to="/cart" className="cart-btn" title="View Cart">
             <span className="cart-icon">🛒</span>
-            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-          </button>
-          <button
-            className="login-btn"
-            onClick={onLoginClick}
-            title={isLoggedIn ? 'Logout' : 'Login'}
-          >
-            {isLoggedIn ? '👤 Logout' : 'Login'}
-          </button>
+            {cartItems.length > 0 && <span className="cart-badge">{cartItems.length}</span>}
+          </Link>
         </div>
       </div>
     </nav>

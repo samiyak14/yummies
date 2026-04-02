@@ -1,4 +1,4 @@
-/* Navbar Container */
+/* Navbar */
 .navbar {
   background: linear-gradient(135deg, #ef4f5f 0%, #f7941d 100%);
   box-shadow: 0 4px 12px rgba(239, 79, 95, 0.15);
@@ -17,7 +17,6 @@
   gap: 20px;
 }
 
-/* Logo / App Name */
 .navbar-logo {
   display: flex;
   align-items: center;
@@ -25,6 +24,8 @@
   flex-shrink: 0;
   cursor: pointer;
   transition: transform 0.2s ease;
+  text-decoration: none;
+  color: white;
 }
 
 .navbar-logo:hover {
@@ -38,40 +39,27 @@
 .logo-text {
   font-size: 24px;
   font-weight: 700;
-  color: white;
   letter-spacing: 0.5px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Search Bar */
 .navbar-search {
   flex: 1;
   max-width: 500px;
   display: flex;
   align-items: center;
   background: white;
-  border-radius: 8px;
-  padding: 10px 15px;
+  border-radius: 25px;
+  padding: 8px 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
-}
-
-.navbar-search:focus-within {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .search-input {
   flex: 1;
   border: none;
   outline: none;
-  font-size: 14px;
-  color: #333;
-  background: transparent;
-  font-family: inherit;
-}
-
-.search-input::placeholder {
-  color: #999;
+  font-size: 16px;
+  padding: 8px;
 }
 
 .search-btn {
@@ -79,156 +67,42 @@
   border: none;
   font-size: 18px;
   cursor: pointer;
-  padding: 0;
-  margin-left: 10px;
-  transition: transform 0.2s ease;
+  color: #666;
 }
 
-.search-btn:hover {
-  transform: scale(1.1);
-}
-
-/* Right Section */
 .navbar-right {
   display: flex;
   align-items: center;
   gap: 15px;
-  flex-shrink: 0;
 }
 
-/* Cart Button */
 .cart-btn {
-  position: relative;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid white;
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: 20px;
-  cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.2);
   color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 25px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.3s ease;
 }
 
 .cart-btn:hover {
   background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
 }
 
 .cart-icon {
-  display: block;
+  font-size: 20px;
 }
 
 .cart-badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #ffeb3b;
-  color: #ef4f5f;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-}
-
-/* Login Button */
-.login-btn {
-  background: white;
-  color: #ef4f5f;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 24px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  letter-spacing: 0.3px;
-}
-
-.login-btn:hover {
   background: #f7941d;
   color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .navbar-container {
-    flex-wrap: wrap;
-    padding: 12px 15px;
-    gap: 12px;
-  }
-
-  .navbar-logo {
-    order: 1;
-  }
-
-  .navbar-search {
-    order: 3;
-    flex-basis: 100%;
-    max-width: none;
-  }
-
-  .navbar-right {
-    order: 2;
-    gap: 10px;
-  }
-
-  .logo-text {
-    font-size: 20px;
-  }
-
-  .logo-icon {
-    font-size: 24px;
-  }
-
-  .search-input {
-    font-size: 13px;
-  }
-
-  .login-btn {
-    padding: 10px 18px;
-    font-size: 13px;
-  }
-
-  .cart-btn {
-    padding: 8px 12px;
-    font-size: 18px;
-  }
-}
-
-@media (max-width: 480px) {
-  .navbar-container {
-    padding: 10px 10px;
-    gap: 10px;
-  }
-
-  .logo-text {
-    font-size: 18px;
-  }
-
-  .logo-icon {
-    font-size: 22px;
-  }
-
-  .search-input::placeholder {
-    font-size: 12px;
-  }
-
-  .login-btn {
-    padding: 8px 14px;
-    font-size: 12px;
-  }
-
-  .navbar-search {
-    padding: 8px 12px;
-  }
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: bold;
 }

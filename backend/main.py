@@ -89,15 +89,15 @@ def get_restaurants():
 # -----------------------------
 @app.get("/restaurants/{restaurant_id}/menu")
 def get_menu(restaurant_id: int):
-    sample_menu = {
-        1: [{"id": 1, "name": "Margherita Pizza", "price": 10.0}],
-        2: [{"id": 1, "name": "Cheeseburger", "price": 8.0}]
-    }
-
-    if restaurant_id not in sample_menu:
-        raise HTTPException(status_code=404, detail="Restaurant not found")
-
-    return sample_menu[restaurant_id]
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(
+                text("SELECT * FROM menu WHERE restaurant_id = :rid"),
+                {"rid": restaurant_id}
+            )
+            return [dict(row._mapping) for row in result]
+    except Exception as e:
+        return {"error": str(e)}
 
 
 # -----------------------------
@@ -168,5 +168,36 @@ def create_table():
                 );
             """))
         return {"message": "Table created successfully"}
+    except Exception as e:
+        return {"error": str(e)}
+    
+@app.get("/create-menu-table")
+def create_menu_table():
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS menu (
+                    id SERIAL PRIMARY KEY,
+                    restaurant_id INT,
+                    name TEXT,
+                    price FLOAT,
+                    image TEXT
+                );
+            """))
+        return {"message": "Menu table created"}
+    except Exception as e:
+        return {"error": str(e)}
+    
+@app.get("/init-menu")
+def init_menu():
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("""
+                INSERT INTO menu (restaurant_id, name, price, image)
+                VALUES
+                (1, 'Margherita Pizza', 10.0, 'https://yummies-images.s3.ap-south-1.amazonaws.com/margherita.jpg'),
+                (2, 'Cheeseburger', 8.0, 'https://yummies-images.s3.ap-south-1.amazonaws.com/cheeseburger.jpg');
+            """))
+        return {"message": "Menu initialized"}
     except Exception as e:
         return {"error": str(e)}

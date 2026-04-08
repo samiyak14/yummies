@@ -1,53 +1,200 @@
-# Getting Started with Create React App
+# Yummies - Food Delivery Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack food delivery application built with React (frontend) and FastAPI (backend). Browse restaurants, view menus, add items to your cart, and place orders.
+
+## Project Structure
+
+```
+yummies/
+├── frontend (React)
+│   ├── src/
+│   │   ├── components/       # Reusable React components
+│   │   ├── pages/            # Page components (Home, Menu, Cart)
+│   │   ├── styles/           # CSS stylesheets
+│   │   ├── App.js            # Main App component
+│   │   └── CartContext.js    # Context for cart state management
+│   ├── public/               # Static files
+│   └── package.json          # Frontend dependencies
+│
+└── backend (FastAPI)
+    ├── main.py               # FastAPI application entry point
+    ├── models.py             # Data models
+    ├── database.py           # Database configuration
+    ├── routes/               # API route handlers
+    └── requirements.txt      # Backend dependencies
+```
+
+## Prerequisites
+
+- **Node.js** (v14 or higher) and npm
+- **Python** (v3.8 or higher)
+- **pip** (Python package manager)
+
+## Installation & Setup
+
+### 1. Clone/Navigate to the Project
+
+```bash
+cd yummies
+```
+
+### 2. Backend Setup
+
+#### Create a Python Virtual Environment
+
+```bash
+# Create virtual environment
+python -m venv .venv
+
+# Activate virtual environment
+# On Windows:
+.venv\Scripts\activate
+# On macOS/Linux:
+source .venv/bin/activate
+```
+
+#### Install Backend Dependencies
+
+```bash
+pip install -r backend/requirements.txt
+```
+
+### 3. Frontend Setup
+
+#### Install Frontend Dependencies
+
+```bash
+npm install
+```
+
+## Running the Project
+
+### Start the Backend Server
+
+From the project root (with the virtual environment activated):
+
+```bash
+cd backend
+python main.py
+```
+
+The backend API will run on `http://localhost:8000`
+
+**API Documentation** is available at:
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
+
+### Start the Frontend Development Server
+
+In a new terminal (from the project root):
+
+```bash
+npm start
+```
+
+The frontend will open automatically at `http://localhost:3000`
 
 ## Available Scripts
 
-In the project directory, you can run:
+### Frontend Scripts
 
-### `npm start`
+```bash
+# Start development server
+npm start
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+# Build for production
+npm run build
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Run tests
+npm test
 
-### `npm test`
+# Eject configuration (not reversible)
+npm run eject
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## API Endpoints
 
-### `npm run build`
+The backend provides the following endpoints:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Restaurants
+- `GET /restaurants` - Get all restaurants
+- `GET /restaurants/{id}` - Get restaurant details
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Orders
+- `GET /orders` - Get all orders
+- `POST /orders` - Create a new order
+- `GET /orders/{id}` - Get order details
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Cart
+- `GET /cart` - Get cart items
+- `POST /cart` - Add item to cart
+- `DELETE /cart/{item_id}` - Remove item from cart
 
-### `npm run eject`
+## Features
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- 🏪 Browse restaurants and their menus
+- 🛒 Add items to shopping cart
+- 📋 View order history
+- 🎨 Responsive UI with React Router navigation
+- ⚡ Fast API powered backend with CORS enabled
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Tech Stack
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Frontend
+- React 19.2.4
+- React Router DOM 7.13.1
+- React Scripts 5.0.1
+- CSS3
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Backend
+- FastAPI 0.104.1
+- Uvicorn 0.24.0 (ASGI server)
+- Pydantic 2.5.0 (data validation)
 
-## Learn More
+## Development Notes
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **CORS is enabled** on the backend to allow requests from the React frontend
+- The backend runs on port `8000` by default
+- The frontend runs on port `3000` by default
+- Frontend uses Context API (CartContext) for state management
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Troubleshooting
 
-### Code Splitting
+### Port Already in Use
+If port 3000 or 8000 is already in use, you can specify a different port:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+**Frontend:**
+```bash
+PORT=3001 npm start
+```
+
+**Backend:**
+Modify `main.py` to use a different port (e.g., `uvicorn.run(app, host="0.0.0.0", port=8001)`)
+
+### Virtual Environment Issues
+If the virtual environment doesn't activate, try:
+```bash
+python -m venv .venv --clear
+# then activate and reinstall dependencies
+```
+
+### CORS Errors
+Ensure the backend is running and CORS middleware is properly configured. Check that both frontend and backend are running simultaneously.
+
+## Contributing
+
+1. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+2. Commit changes (`git commit -m 'Add AmazingFeature'`)
+3. Push to the branch (`git push origin feature/AmazingFeature`)
+4. Open a Pull Request
+
+## License
+
+This project is part of a coursework assignment.
+
+---
+
+**Happy Coding! 🍕🍔🍱**
 
 ### Analyzing the Bundle Size
 

@@ -105,52 +105,75 @@ def get_menu(restaurant_id: int):
 # -----------------------------
 @app.post("/cart")
 def add_to_cart(order: Order):
-    cart.append({
-        "restaurant_id": order.restaurant_id,
-        "item_id": order.item_id,
-        "quantity": order.quantity
-    })
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("""
+                INSERT INTO cart_items (restaurant_id, item_id, quantity)
+                VALUES (:rid, :iid, :qty)
+            """), {
+                "rid": order.restaurant_id,
+                "iid": order.item_id,
+                "qty": order.quantity
+            })
 
-    return {
-        "message": "Item added to cart",
-        "cart": cart
-    }
+        return {"message": "Item added to cart"}
+    except Exception as e:
+        return {"error": str(e)}
 
 
-@app.get("/cart")
-def view_cart():
-    return cart
+@app.post("/cart")
+def add_to_cart(order: Order):
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("""
+                INSERT INTO cart_items (restaurant_id, item_id, quantity)
+                VALUES (:rid, :iid, :qty)
+            """), {
+                "rid": order.restaurant_id,
+                "iid": order.item_id,
+                "qty": order.quantity
+            })
 
+        return {"message": "Item added to cart"}
+    except Exception as e:
+        return {"error": str(e)}
 
 # -----------------------------
 # ORDERS
 # -----------------------------
 @app.post("/orders")
 def place_order():
-    if not cart:
-        raise HTTPException(status_code=400, detail="Cart is empty")
+    try:
+        with engine.begin() as conn:
+            cart_items = conn.execute(text("SELECT * FROM cart_items")).fetchall()
 
-    order_id = str(uuid.uuid4())
+            if not cart_items:
+                raise HTTPException(status_code=400, detail="Cart is empty")
 
-    new_order = {
-        "order_id": order_id,
-        "items": cart.copy(),
-        "status": "Order Received"
-    }
+            order_id = str(uuid.uuid4())
 
-    orders.append(new_order)
-    cart.clear()
+            conn.execute(text("""
+                INSERT INTO orders (order_id, status)
+                VALUES (:oid, 'Order Received')
+            """), {"oid": order_id})
 
-    return {
-        "message": "Order placed successfully",
-        "order_id": order_id
-    }
+            conn.execute(text("DELETE FROM cart_items"))
 
+        return {
+            "message": "Order placed successfully",
+            "order_id": order_id
+        }
 
+    except Exception as e:
+        return {"error": str(e)}
 @app.get("/orders")
 def get_orders():
-    return orders
-
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(text("SELECT * FROM orders"))
+            return [dict(row._mapping) for row in result]
+    except Exception as e:
+        return {"error": str(e)}
 @app.get("/create-table")
 def create_table():
     try:
@@ -199,5 +222,36 @@ def init_menu():
                 (2, 'Cheeseburger', 8.0, 'https://yummies-images.s3.ap-south-1.amazonaws.com/cheeseburger.jpg');
             """))
         return {"message": "Menu initialized"}
+    except Exception as e:
+        return {"error": str(e)}
+    
+@app.get("/create-cart-table")
+def create_cart_table():
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS cart_items (
+                    id SERIAL PRIMARY KEY,
+                    restaurant_id INT,
+                    item_id INT,
+                    quantity INT
+                );
+            """))
+        return {"message": "Cart table created"}
+    except Exception as e:
+        return {"error": str(e)}
+    
+@app.get("/create-orders-table")
+def create_orders_table():
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS orders (
+                    id SERIAL PRIMARY KEY,
+                    order_id TEXT,
+                    status TEXT
+                );
+            """))
+        return {"message": "Orders table created"}
     except Exception as e:
         return {"error": str(e)}

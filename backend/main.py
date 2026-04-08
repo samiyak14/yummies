@@ -120,15 +120,26 @@ def add_to_cart(order: Order):
     except Exception as e:
         return {"error": str(e)}
 
-
 @app.get("/cart")
 def view_cart():
     try:
         with engine.connect() as conn:
-            result = conn.execute(text("SELECT * FROM cart_items"))
+            result = conn.execute(text("""
+                SELECT 
+                    c.id,
+                    c.quantity,
+                    m.name,
+                    m.price,
+                    m.image
+                FROM cart_items c
+                JOIN menu m ON c.item_id = m.id
+            """))
+
             return [dict(row._mapping) for row in result]
+
     except Exception as e:
         return {"error": str(e)}
+    
 # -----------------------------
 # ORDERS
 # -----------------------------

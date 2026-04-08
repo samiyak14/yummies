@@ -60,15 +60,18 @@ def create_tables():
 # -----------------------------
 @app.get("/init-db")
 def init_db():
-    with engine.connect() as conn:
-        conn.execute(text("""
-            INSERT INTO restaurants 
-            (name, image, rating, reviews, delivery_time, delivery_fee, cuisine)
-            VALUES
-            ('Pizza Place', 'https://yummies-images.s3.ap-south-1.amazonaws.com/pizza.jpg', 4.5, 120, 30, 40, 'Pizza'),
-            ('Burger Joint', 'https://yummies-images.s3.ap-south-1.amazonaws.com/burger.jpg', 4.2, 90, 25, 30, 'Burgers');
-        """))
-    return {"message": "Database initialized"}
+    try:
+        with engine.begin() as conn:  # ✅ IMPORTANT CHANGE
+            conn.execute(text("""
+                INSERT INTO restaurants 
+                (name, image, rating, reviews, delivery_time, delivery_fee, cuisine)
+                VALUES
+                ('Pizza Place', 'https://yummies-images.s3.ap-south-1.amazonaws.com/pizza.jpg', 4.5, 120, 30, 40, 'Pizza'),
+                ('Burger Joint', 'https://yummies-images.s3.ap-south-1.amazonaws.com/burger.jpg', 4.2, 90, 25, 30, 'Burgers');
+            """))
+        return {"message": "Database initialized"}
+    except Exception as e:
+        return {"error": str(e)}
 
 
 # -----------------------------
@@ -151,7 +154,7 @@ def get_orders():
 @app.get("/create-table")
 def create_table():
     try:
-        with engine.connect() as conn:
+        with engine.begin() as conn:  # ✅ IMPORTANT CHANGE
             conn.execute(text("""
                 CREATE TABLE IF NOT EXISTS restaurants (
                     id SERIAL PRIMARY KEY,

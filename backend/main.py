@@ -147,3 +147,23 @@ def place_order():
 @app.get("/orders")
 def get_orders():
     return orders
+
+@app.get("/create-table")
+def create_table():
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS restaurants (
+                    id SERIAL PRIMARY KEY,
+                    name TEXT,
+                    image TEXT,
+                    rating FLOAT,
+                    reviews INT,
+                    delivery_time INT,
+                    delivery_fee INT,
+                    cuisine TEXT
+                );
+            """))
+        return {"message": "Table created successfully"}
+    except Exception as e:
+        return {"error": str(e)}

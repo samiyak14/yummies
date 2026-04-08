@@ -1,11 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import create_engine, text
 import uuid
 
 app = FastAPI()
 
-# Enable CORS (VERY IMPORTANT for React)
+# ✅ Enable CORS (for React)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,76 +15,113 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Sample data
-restaurants = [
-    {
-        "id": 1,
-        "name": "Pizza Place",
-        "image": "https://yummies-images.s3.ap-south-1.amazonaws.com/pizza.jpg",  # ✅ ADD THIS
-        "rating": 4.5,
-        "reviews": 120,
-        "delivery_time": 30,
-        "delivery_fee": 40,
-        "cuisine": "Pizza",
-        "menu": [
-            {"id": 1, "name": "Margherita Pizza", "price": 10.0}
-        ]
-    },
-    {
-        "id": 2,
-        "name": "Burger Joint",
-        "image": "https://yummies-images.s3.ap-south-1.amazonaws.com/burger.jpg",  # ✅ ADD THIS
-        "rating": 4.2,
-        "reviews": 90,
-        "delivery_time": 25,
-        "delivery_fee": 30,
-        "cuisine": "Burgers",
-        "menu": [
-            {"id": 1, "name": "Cheeseburger", "price": 8.0}
-        ]
-    }
-]
+# ✅ 🔥 DATABASE CONNECTION (EDIT THIS ONLY)
+DATABASE_URL = "postgresql://postgres:080712sk@yummies-db.cboi862miacx.ap-south-1.rds.amazonaws.com:5432/postgres"
+
+engine = create_engine(DATABASE_URL)
+
+# -----------------------------
+# TEMP IN-MEMORY STORAGE
+# -----------------------------
 cart = []
 orders = []
 
+# -----------------------------
+# MODELS
+# -----------------------------
 class Order(BaseModel):
     restaurant_id: int
     item_id: int
     quantity: int
 
+
+# -----------------------------
+# CREATE TABLE ON STARTUP
+# -----------------------------
+@app.on_event("startup")
+def create_tables():
+    with engine.connect() as conn:
+        conn.execute(text("""
+            CREATE TABLE IF NOT EXISTS restaurants (
+                id SERIAL PRIMARY KEY,
+                name TEXT,
+                image TEXT,
+                rating FLOAT,
+                reviews INT,
+                delivery_time INT,
+                delivery_fee INT,
+                cuisine TEXT
+            );
+        """))
+
+
+# -----------------------------
+# INIT DATABASE (RUN ONCE)
+# -----------------------------
+@app.get("/init-db")
+def init_db():
+    with engine.connect() as conn:
+        conn.execute(text("""
+            INSERT INTO restaurants 
+            (name, image, rating, reviews, delivery_time, delivery_fee, cuisine)
+            VALUES
+            ('Pizza Place', 'https://yummies-images.s3.ap-south-1.amazonaws.com/pizza.jpg', 4.5, 120, 30, 40, 'Pizza'),
+            ('Burger Joint', 'https://yummies-images.s3.ap-south-1.amazonaws.com/burger.jpg', 4.2, 90, 25, 30, 'Burgers');
+        """))
+    return {"message": "Database initialized"}
+
+
+# -----------------------------
+# GET RESTAURANTS FROM DB
+# -----------------------------
 @app.get("/restaurants")
 def get_restaurants():
-    return restaurants
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT * FROM restaurants"))
+        return [dict(row._mapping) for row in result]
 
+
+# -----------------------------
+# TEMP MENU (STILL HARDCODED)
+# -----------------------------
 @app.get("/restaurants/{restaurant_id}/menu")
 def get_menu(restaurant_id: int):
-    restaurant = next((r for r in restaurants if r["id"] == restaurant_id), None)
-    if not restaurant:
-        raise HTTPException(status_code=404, detail="Restaurant not found")
-    return restaurant["menu"]
+    sample_menu = {
+        1: [{"id": 1, "name": "Margherita Pizza", "price": 10.0}],
+        2: [{"id": 1, "name": "Cheeseburger", "price": 8.0}]
+    }
 
+    if restaurant_id not in sample_menu:
+        raise HTTPException(status_code=404, detail="Restaurant not found")
+
+    return sample_menu[restaurant_id]
+
+
+# -----------------------------
+# CART
+# -----------------------------
 @app.post("/cart")
 def add_to_cart(order: Order):
-    restaurant = next((r for r in restaurants if r["id"] == order.restaurant_id), None)
-    if not restaurant:
-        raise HTTPException(status_code=404, detail="Restaurant not found")
-
-    item = next((i for i in restaurant["menu"] if i["id"] == order.item_id), None)
-    if not item:
-        raise HTTPException(status_code=404, detail="Menu item not found")
-
     cart.append({
         "restaurant_id": order.restaurant_id,
         "item_id": order.item_id,
         "quantity": order.quantity
     })
 
-    return {"message": "Item added to cart", "cart": cart}
+    return {
+        "message": "Item added to cart",
+        "cart": cart
+    }
+
 
 @app.get("/cart")
 def view_cart():
     return cart
 
+
+# -----------------------------
+# ORDERS
+# -----------------------------
 @app.post("/orders")
 def place_order():
     if not cart:
@@ -104,6 +142,7 @@ def place_order():
         "message": "Order placed successfully",
         "order_id": order_id
     }
+
 
 @app.get("/orders")
 def get_orders():

@@ -12,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/restaurants');
+        const response = await fetch('http://13.126.227.210:8000/restaurants');
         if (!response.ok) throw new Error('Failed to fetch restaurants');
         const data = await response.json();
         setRestaurants(data);

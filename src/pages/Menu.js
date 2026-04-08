@@ -15,7 +15,7 @@ export default function Menu() {
     const fetchMenu = async () => {
       try {
         const response = await fetch(
-          `http://127.0.0.1:8000/restaurants/${id}/menu`
+          `http://13.126.227.210:8000/restaurants/${id}/menu`
         );
 
         if (!response.ok) {

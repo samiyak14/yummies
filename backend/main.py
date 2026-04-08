@@ -16,10 +16,33 @@ app.add_middleware(
 
 # Sample data
 restaurants = [
-    {"id": 1, "name": "Pizza Place", "menu": [{"id": 1, "name": "Margherita Pizza", "price": 10.0}]},
-    {"id": 2, "name": "Burger Joint", "menu": [{"id": 1, "name": "Cheeseburger", "price": 8.0}]}
+    {
+        "id": 1,
+        "name": "Pizza Place",
+        "image": "https://yummies-images.s3.ap-south-1.amazonaws.com/pizza.jpg",  # ✅ ADD THIS
+        "rating": 4.5,
+        "reviews": 120,
+        "delivery_time": 30,
+        "delivery_fee": 40,
+        "cuisine": "Pizza",
+        "menu": [
+            {"id": 1, "name": "Margherita Pizza", "price": 10.0}
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Burger Joint",
+        "image": "https://yummies-images.s3.ap-south-1.amazonaws.com/burger.jpg",  # ✅ ADD THIS
+        "rating": 4.2,
+        "reviews": 90,
+        "delivery_time": 25,
+        "delivery_fee": 30,
+        "cuisine": "Burgers",
+        "menu": [
+            {"id": 1, "name": "Cheeseburger", "price": 8.0}
+        ]
+    }
 ]
-
 cart = []
 orders = []
 

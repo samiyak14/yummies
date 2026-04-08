@@ -9,7 +9,7 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = async (restaurantId, itemId, quantity = 1) => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/cart', {
+      const response = await fetch('http://13.126.227.210:8000/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export const CartProvider = ({ children }) => {
 
   const fetchCart = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/cart');
+      const response = await fetch('http://13.126.227.210:8000/cart');
       if (!response.ok) throw new Error('Failed to fetch cart');
       const data = await response.json();
       setCartItems(data);
@@ -42,7 +42,7 @@ export const CartProvider = ({ children }) => {
 
   const placeOrder = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/orders', {
+      const response = await fetch('http://13.126.227.210:8000/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

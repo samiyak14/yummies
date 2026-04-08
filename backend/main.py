@@ -121,23 +121,14 @@ def add_to_cart(order: Order):
         return {"error": str(e)}
 
 
-@app.post("/cart")
-def add_to_cart(order: Order):
+@app.get("/cart")
+def view_cart():
     try:
-        with engine.begin() as conn:
-            conn.execute(text("""
-                INSERT INTO cart_items (restaurant_id, item_id, quantity)
-                VALUES (:rid, :iid, :qty)
-            """), {
-                "rid": order.restaurant_id,
-                "iid": order.item_id,
-                "qty": order.quantity
-            })
-
-        return {"message": "Item added to cart"}
+        with engine.connect() as conn:
+            result = conn.execute(text("SELECT * FROM cart_items"))
+            return [dict(row._mapping) for row in result]
     except Exception as e:
         return {"error": str(e)}
-
 # -----------------------------
 # ORDERS
 # -----------------------------
